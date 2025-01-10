@@ -9,7 +9,11 @@ def run_watson_emotion_detection(text_to_analyze):
     input_json = { 'raw_document': { 'text': text_to_analyze } }
 
     response = requests.post(url, 
-                            json=input_json, 
-                            headers=headers)
-    output_json = json.loads(response.text)
-    return output_json
+                             json=input_json, 
+                             headers=headers)
+    response_json = json.loads(response.text)
+    response_emotions = response_json.get('emotionPredictions')[0].get('emotion')
+    response_dominant = max(response_emotions, key=response_emotions.get)
+    response_emotions.update({ 'dominant_emotion': response_dominant })
+    
+    return response_emotions
