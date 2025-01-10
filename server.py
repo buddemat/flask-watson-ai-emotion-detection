@@ -11,8 +11,12 @@ def show_index_page():
 def run_emotion_detection():
     text_to_analyze = request.args.get('textToAnalyze')
     result_json = emo(text_to_analyze)
-    dominant_emotion = result_json.pop('dominant_emotion')
-    return f'For the given statement, the system response is {str(result_json).strip("{}")}. The dominant emotion is <b>{dominant_emotion}</b>.'
+    dominant_emotion = result_json.get('dominant_emotion')
+    if dominant_emotion is None:
+        return '<b>Invalid text! Please try again!</b>'
+    else:
+        result_json.pop('dominant_emotion')
+        return f'For the given statement, the system response is {str(result_json).strip("{}")}. The dominant emotion is <b>{dominant_emotion}</b>.'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', 
